@@ -30,7 +30,7 @@ public class PlayerServerMixin implements ITicksIdle {
         PlayerServer self = (PlayerServer) (Object) this;
         ((ITicksIdle) this).incrementTicksIdle();
 
-        if (ticksIdle > BTAFK.TICKS_UNTIL_AFK && !flaggedAFK) {
+        if (ticksIdle >= BTAFK.TICKS_UNTIL_AFK && !flaggedAFK) {
             MinecraftServer.getInstance().playerList
                     .sendEncryptedChatToAllPlayers(self.getDisplayName() + TextFormatting.RESET + " is now AFK");
             flaggedAFK = true;
@@ -56,22 +56,34 @@ public class PlayerServerMixin implements ITicksIdle {
 
     @Override
     public void incrementTicksIdle() {
-        if (ticksIdle + 1> BTAFK.TICKS_UNTIL_AFK) {
+        if (ticksIdle + 1 > BTAFK.TICKS_UNTIL_AFK) {
             return;
         }
         ticksIdle++;
+        if(BTAFK.DEBUG_MODE){
+            MinecraftServer.getInstance().playerList.sendEncryptedChatToAllPlayers(ticksIdle + "");
+        }
+        
+        
     }
 
     @Override
     public void resetTicksIdle() {
-        ticksIdle = 0;
-
+        
+        if (flaggedAFK) {
+            flaggedAFK = false;
+            PlayerServer self = (PlayerServer) (Object) this;
+            MinecraftServer.getInstance().playerList
+                    .sendEncryptedChatToAllPlayers(self.getDisplayName() + TextFormatting.RESET + " is no longer AFK");
+            MinecraftServer.getInstance().playerList.updatePlayerProfile(self.username, self.getDisplayName(),
+                    self.uuid,
+                    self.score, self.chatColor, true, self.isOperator());
+        }
         flaggedAFK = false;
-        PlayerServer self = (PlayerServer) (Object) this;
-        MinecraftServer.getInstance().playerList
-                .sendEncryptedChatToAllPlayers(self.getDisplayName() + TextFormatting.RESET + " is no longer AFK");
-        MinecraftServer.getInstance().playerList.updatePlayerProfile(self.username, self.getDisplayName(), self.uuid,
-                self.score, self.chatColor, true, self.isOperator());
+        ticksIdle = 0;
+        
+        
+
         return;
     }
 

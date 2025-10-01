@@ -18,6 +18,7 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	// Unused
 	public static int SECONDS_UNTIL_AFK = 300;
 	public static int MINS_UNTIL_AFK = 5;
+	public static boolean DEBUG_MODE = false;
 	// !Unused
 	
 	
@@ -35,7 +36,9 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	
 	
 	public void serverInitialize(){
-		
+		if(DEBUG_MODE){
+			TICKS_UNTIL_AFK = 100;
+		}
 	}
 	
 	@Override
