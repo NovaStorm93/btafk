@@ -1,4 +1,4 @@
-package novasmods.btafk.mixin.mixininterfaces;
+package novasmods.btafk.interfaces;
 
 public interface ITicksIdle {
     

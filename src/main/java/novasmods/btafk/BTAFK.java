@@ -14,13 +14,25 @@ import turniplabs.halplibe.util.RecipeEntrypoint;
 public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypoint {
     public static final String MOD_ID = "btafk";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static int TICKS_UNTIL_AFK = 6000;
+	// Unused
+	public static int SECONDS_UNTIL_AFK = 300;
+	public static int MINS_UNTIL_AFK = 5;
+	// !Unused
+	
+	
     @Override
     public void onInitialize() {
         LOGGER.info("ExampleMod initialized.");
 		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) serverInitialize();
+		else clientInitialize();
 		
     }
 
+	public void clientInitialize(){
+		LOGGER.warn("This mod is currently not intended to be run client-side and does nothing. Please remove this mod from your client");
+	}
+	
 	
 	public void serverInitialize(){
 		

@@ -19,13 +19,13 @@ import net.minecraft.core.net.packet.PacketUpdatePlayerState;
 import net.minecraft.core.net.packet.PacketUseOrPlaceItemStack;
 import net.minecraft.server.entity.player.PlayerServer;
 import net.minecraft.server.net.handler.PacketHandlerServer;
+import novasmods.btafk.interfaces.ITicksIdle;
 
-
-@Mixin(value = NetworkManager.class,remap = false)
+@Mixin(value = NetworkManager.class, remap = false)
 public class NetworkManagerMixin {
-    
-    @Redirect(method = "processReadPackets()V", at = @At(value="INVOKE",target="Lnet/minecraft/core/net/packet/Packet;handlePacket(Lnet/minecraft/core/net/handler/PacketHandler;)V"))
-    private void onProcessReadPackets(Packet packet,PacketHandler packetHandler){
+
+    @Redirect(method = "processReadPackets()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/net/packet/Packet;handlePacket(Lnet/minecraft/core/net/handler/PacketHandler;)V"))
+    private void onProcessReadPackets(Packet packet, PacketHandler packetHandler) {
         if (packet instanceof PacketMovePlayer.Rot ||
                 packet instanceof PacketMovePlayer.Pos ||
                 packet instanceof PacketMovePlayer.PosRot ||
@@ -37,22 +37,17 @@ public class NetworkManagerMixin {
                 packet instanceof PacketContainerClick ||
                 packet instanceof PacketInteract ||
                 packet instanceof PacketSignUpdate ||
-                packet instanceof PacketChat
-        ) {
-            
-            
-            PlayerServer playerServer = ((PacketHandlerServerAcessor) (PacketHandlerServer) packetHandler).getPlayerEntity();
-            if(playerServer != null){
-                // ((ITicksIdle)playerServer).resetTicksIdle();
+                packet instanceof PacketChat) {
+
+            PlayerServer playerServer = ((PacketHandlerServerAcessor) (PacketHandlerServer) packetHandler)
+                    .getPlayerEntity();
+            if (playerServer != null) {
+                ((ITicksIdle) playerServer).resetTicksIdle();
             }
         }
-        
-        
-        
-        
+
         packet.handlePacket(packetHandler);
-        
-        
+
     }
-    
+
 }
