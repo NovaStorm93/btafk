@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "btafk",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This mod aims to help new BTA modders.",
+  "name": "BTAFK",
+  "description": "Server-side AFK plugin to mark idle players as AFK",
   "authors": [
-    "Turnip Labs"
+    "NovaStorm93"
   ],
   "contact": {
     "homepage": "",
@@ -19,20 +19,20 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-			"turniplabs.examplemod.ExampleMod"
+			"novasmods.btafk.BTAFK"
     ],
 		"beforeGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+			"novasmods.btafk.BTAFK"
 		],
 		"afterGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+			"novasmods.btafk.BTAFK"
 		],
 		"recipesReady": [
-			"turniplabs.examplemod.ExampleMod"
+			"novasmods.btafk.BTAFK"
 		]
 	},
   "mixins": [
-      "examplemod.mixins.json"
+      "btafk.mixins.json"
   ],
 
   "depends": {
@@ -41,4 +41,6 @@
   },
   "suggests": {
   }
+  
+  
 }
