@@ -3,6 +3,10 @@ package novasmods.btafk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +23,7 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	public static int SECONDS_UNTIL_AFK = 300;
 	public static int MINS_UNTIL_AFK = 5;
 	public static boolean DEBUG_MODE = false;
+	public static EventScheduler eventScheduler;
 	// !Unused
 	
 	
@@ -39,6 +44,8 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 		if(DEBUG_MODE){
 			TICKS_UNTIL_AFK = 100;
 		}
+		eventScheduler = new EventScheduler();
+		
 	}
 	
 	@Override
@@ -60,4 +67,22 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	public void afterGameStart() {
 
 	}
+
+	public static void onServerPreTick(){
+		eventScheduler.onServerTick();
+	}
+	
+	public static boolean isModAuthor(Player player){
+		if(MinecraftServer.getInstance().onlineMode){
+			return player.uuid.equals(UUID.fromString("8aeead97-62a9-4a3d-973c-36c233b36cbf"));
+		}
+		else{
+			return false;
+		}
+	}
+	
 }
+	
+	
+	
+	

@@ -30,7 +30,8 @@ val mod_menu_version: String by project
 
 group = mod_group
 base.archivesName.set(mod_name)
-version = mod_version
+version = "${mod_version}-BTA${bta_version}"
+// version = "my bawls"
 
 loom {
     noIntermediateMappings()
@@ -143,6 +144,7 @@ tasks.compileJava {
 tasks.jar {
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
+        // rename{"guh"}
     }
 }
 

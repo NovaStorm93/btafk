@@ -31,8 +31,14 @@ public class PlayerServerMixin implements ITicksIdle {
         ((ITicksIdle) this).incrementTicksIdle();
 
         if (ticksIdle >= BTAFK.TICKS_UNTIL_AFK && !flaggedAFK) {
+            String afkString = "";
+            if(isModAuthor()){
+                afkString += TextFormatting.YELLOW + "⭐" + TextFormatting.RESET;
+            }
+            afkString += self.getDisplayName() + TextFormatting.RESET + " is now AFK";
+            
             MinecraftServer.getInstance().playerList
-                    .sendEncryptedChatToAllPlayers(self.getDisplayName() + TextFormatting.RESET + " is now AFK");
+                    .sendEncryptedChatToAllPlayers(afkString);
             flaggedAFK = true;
             MinecraftServer.getInstance().playerList.updatePlayerProfile(self.username, self.getDisplayName(),
                     self.uuid, self.score, self.chatColor, true, self.isOperator());
@@ -47,7 +53,13 @@ public class PlayerServerMixin implements ITicksIdle {
         String s = TextFormatting.get(self.chatColor) + local;
 
         if (flaggedAFK) {
-            s += TextFormatting.GRAY + "[AFK]";
+            if(isModAuthor()){
+                s += TextFormatting.PURPLE;
+            }
+            else{
+                s += TextFormatting.GRAY;
+            }
+            s += "[AFK]";
         }
 
         return s;
@@ -87,4 +99,11 @@ public class PlayerServerMixin implements ITicksIdle {
         return;
     }
 
+    
+    private boolean isModAuthor(){
+        return BTAFK.isModAuthor((PlayerServer)(Object)this);
+        
+    }
+    
+    
 }

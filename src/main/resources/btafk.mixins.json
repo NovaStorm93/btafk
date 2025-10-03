@@ -10,8 +10,9 @@
     "server":[
       "PlayerServerMixin",
       "NetworkManagerMixin",
-      "PacketHandlerServerAcessor"
-      
+      "PacketHandlerServerAcessor",
+      "SaveHandlerServerMixin",
+      "MinecraftServerMixin"
       
       
       
