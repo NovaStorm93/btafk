@@ -18,7 +18,9 @@ import net.minecraft.core.world.save.SaveHandlerServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.net.PlayerList;
 import novasmods.btafk.BTAFK;
+import novasmods.btafk.BTAFKConfigs;
 import novasmods.btafk.interfaces.IEvent;
+import novasmods.btafk.melonutilities.MelonUtilitiesAPI;
 
 @Mixin(value=SaveHandlerServer.class,remap = false)
 public class SaveHandlerServerMixin implements IEvent{
@@ -33,8 +35,10 @@ public class SaveHandlerServerMixin implements IEvent{
     
 
     private void notifyNewPlayerJoined(Player player){
+        MelonUtilitiesAPI.getInstance().discordSendPlayerFirstJoin(player.username);
         List args = new ArrayList<>();
         args.add(player);
+        
         
         BTAFK.eventScheduler.scheduleEvent(this,1, args);
         
@@ -52,14 +56,17 @@ public class SaveHandlerServerMixin implements IEvent{
         Player player = (Player) args.get(0);
         PlayerList playerList = MinecraftServer.getInstance().playerList;
         String username = player.username;
+        
+        String welcomeMessage;
+        
         if(BTAFK.isModAuthor(player)){
-            
-            playerList.sendEncryptedChatToAllPlayers(TextFormatting.YELLOW + "⭐" + TextFormatting.PURPLE + username + TextFormatting.LIGHT_BLUE + " is new to the server!");    
+            welcomeMessage = String.format(BTAFKConfigs.welcomeMessage,TextFormatting.PURPLE + "⭐" + username + TextFormatting.RESET);
         }
         else{
-            playerList.sendEncryptedChatToAllPlayers(TextFormatting.YELLOW + username + TextFormatting.LIGHT_BLUE + " is new to the server!");   
+            welcomeMessage = String.format(BTAFKConfigs.welcomeMessage,username + TextFormatting.RESET);   
         }
         
+        playerList.sendEncryptedChatToAllPlayers(welcomeMessage);
         
         
         

@@ -40,6 +40,7 @@
     "fabricloader": ">=0.15.5"
   },
   "suggests": {
+    "melonutilities":">=1.0.3-7.3_03"
   }
   
   

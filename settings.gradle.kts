@@ -17,5 +17,6 @@ pluginManagement {
 			name = "SignalumMavenInfrastructure"
 			url = uri("https://maven.thesignalumproject.net/infrastructure")
 		}
+		
 	}
 }

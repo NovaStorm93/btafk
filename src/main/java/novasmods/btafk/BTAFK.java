@@ -13,23 +13,20 @@ import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.util.ClientStartEntrypoint;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 import turniplabs.halplibe.util.RecipeEntrypoint;
+import turniplabs.halplibe.util.TomlConfigHandler;
 
 
 public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypoint {
     public static final String MOD_ID = "btafk";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static int TICKS_UNTIL_AFK = 6000;
-	// Unused
-	public static int SECONDS_UNTIL_AFK = 300;
-	public static int MINS_UNTIL_AFK = 5;
+	
+	
 	public static boolean DEBUG_MODE = false;
 	public static EventScheduler eventScheduler;
-	// !Unused
-	
 	
     @Override
     public void onInitialize() {
-        LOGGER.info("ExampleMod initialized.");
+        LOGGER.info("BTAFK initialized.");
 		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) serverInitialize();
 		else clientInitialize();
 		
@@ -41,10 +38,14 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	
 	
 	public void serverInitialize(){
-		if(DEBUG_MODE){
-			TICKS_UNTIL_AFK = 100;
+		if(FabricLoader.getInstance().isDevelopmentEnvironment()){
+			LOGGER.info("Being run in a development environment. Some variables will be different.");
 		}
 		eventScheduler = new EventScheduler();
+		
+		
+		BTAFKConfigs.onModLoaded();
+		
 		
 	}
 	
