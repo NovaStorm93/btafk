@@ -40,6 +40,7 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 	public void serverInitialize(){
 		if(FabricLoader.getInstance().isDevelopmentEnvironment()){
 			LOGGER.info("Being run in a development environment. Some variables will be different.");
+			BTAFK.DEBUG_MODE = false;
 		}
 		eventScheduler = new EventScheduler();
 		
@@ -81,6 +82,12 @@ public class BTAFK implements ModInitializer, RecipeEntrypoint, GameStartEntrypo
 			return false;
 		}
 	}
+	public static void logInfoIfDebugMode(String input){
+		if(DEBUG_MODE){
+			LOGGER.info(input);	
+		}
+	}
+	
 	
 }
 	

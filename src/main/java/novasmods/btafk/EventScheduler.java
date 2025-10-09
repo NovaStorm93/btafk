@@ -4,32 +4,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import novasmods.btafk.interfaces.IEvent;
+import novasmods.btafk.events.Event;
+
 
 public class EventScheduler {
-    private class Event{
-        IEvent event;
-        int tickDelay;
-        List args;
-        public Event(IEvent event, int tickDelay, List args){
-            this.event = event;
-            this.tickDelay = tickDelay;
-            this.args = args;
-        }
-        
-        
-        public void runEvent(){
-            this.event.runEvent(args);
-        }
-        
-    }
     
     
     List<Event> events = new ArrayList<Event>();
     
-    public void scheduleEvent(IEvent event, int tickDelay, List args){
-        Event scheduledEvent = new Event(event, tickDelay, args);
-        events.add(scheduledEvent);
+    public void scheduleEvent(Event event){
+        events.add(event);
         
         
         
@@ -42,12 +26,11 @@ public class EventScheduler {
         Iterator<Event> i = events.iterator();
         while(i.hasNext()){
             Event event = i.next();
-            event.tickDelay--;
-            
-            if(event.tickDelay <= 0){
-                event.runEvent();
+            boolean shouldRemove = event.tickEvent();
+            if(shouldRemove){
                 i.remove();
             }
+            
             
             
         }

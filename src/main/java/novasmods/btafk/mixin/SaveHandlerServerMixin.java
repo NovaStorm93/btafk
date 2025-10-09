@@ -16,62 +16,48 @@ import net.minecraft.core.net.ChatEmotes;
 import net.minecraft.core.net.command.TextFormatting;
 import net.minecraft.core.world.save.SaveHandlerServer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.entity.player.PlayerServer;
 import net.minecraft.server.net.PlayerList;
 import novasmods.btafk.BTAFK;
 import novasmods.btafk.BTAFKConfigs;
-import novasmods.btafk.interfaces.IEvent;
+import novasmods.btafk.events.EventSendMotd;
+import novasmods.btafk.events.EventSendReturningMessage;
+import novasmods.btafk.events.EventSendWelcomeMessage;
 import novasmods.btafk.melonutilities.MelonUtilitiesAPI;
 
 @Mixin(value=SaveHandlerServer.class,remap = false)
-public class SaveHandlerServerMixin implements IEvent{
+public class SaveHandlerServerMixin{
     
     
     @Inject(method = "load", at = @At("TAIL"),locals = LocalCapture.CAPTURE_FAILHARD)
     public void onPlayerLoad(Player player,CallbackInfo ci, CompoundTag tag){
-        if(tag == null) notifyNewPlayerJoined(player);
-        
-        
-    }
-    
-
-    private void notifyNewPlayerJoined(Player player){
-        MelonUtilitiesAPI.getInstance().discordSendPlayerFirstJoin(player.username);
-        List args = new ArrayList<>();
-        args.add(player);
-        
-        
-        BTAFK.eventScheduler.scheduleEvent(this,1, args);
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-    @Override
-    public void runEvent(List args) {
-        Player player = (Player) args.get(0);
-        PlayerList playerList = MinecraftServer.getInstance().playerList;
-        String username = player.username;
-        
-        String welcomeMessage;
-        
-        if(BTAFK.isModAuthor(player)){
-            welcomeMessage = String.format(BTAFKConfigs.welcomeMessage,TextFormatting.PURPLE + "⭐" + username + TextFormatting.RESET);
+        if(tag == null){
+            notifyNewPlayerJoined(player);
         }
         else{
-            welcomeMessage = String.format(BTAFKConfigs.welcomeMessage,username + TextFormatting.RESET);   
+            notifyReturningPlayer(player);
         }
-        
-        playerList.sendEncryptedChatToAllPlayers(welcomeMessage);
-        
-        
-        
+        sendMOTD(player);
         
     }
     
+    private void sendMOTD(Player player){
+        if(!BTAFKConfigs.motdGlobalEnabled) return;
+        BTAFK.eventScheduler.scheduleEvent(new EventSendMotd(player,BTAFKConfigs.motdTickDelay));
+    }
+    
+    
+    private void notifyNewPlayerJoined(Player player){
+        if(!BTAFKConfigs.welcomeGlobalEnabled) return;
+        
+        MelonUtilitiesAPI.getInstance().discordSendPlayerFirstJoin(player.username);
+        BTAFK.eventScheduler.scheduleEvent(new EventSendWelcomeMessage(player,BTAFKConfigs.welcomeTickDelay));
+    }
+    private void notifyReturningPlayer(Player player){
+        if(!BTAFKConfigs.returningGlobalEnabled) return;
+        BTAFK.eventScheduler.scheduleEvent(new EventSendReturningMessage(player, BTAFKConfigs.returningTickDelay));
+        
+        
+    }
     
 }
